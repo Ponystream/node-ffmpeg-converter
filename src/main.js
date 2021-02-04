@@ -7,12 +7,12 @@ const ffmpeg = require('fluent-ffmpeg');
 let movies = [];
 let currentConverting = null;
 let watcher = null;
-let alreadyConverted = [];
+let excludedConversion = [];
 
 export async function ffmpegConvert(options) {
     if (watcher === null) watchingNewFile(options);
     movies = getFilesFromPathAndExtensions(options['--path'], options['--input-ext']);
-    if (options['--path']) movies = movies.filter(movie => !alreadyConverted.includes(movie));
+    if (options['--path']) movies = movies.filter(movie => !excludedConversion.includes(movie));
 
     if (movies.length) {
         console.log(`${chalk.green.bold(movies.length)} movies remaining to convert`);
@@ -55,10 +55,12 @@ function convert(filepath, options) {
                 process.stdout.write(`Processing: ${chalk.blue.bold(progress.percent.toFixed(2))}%\r`);
             })
             .on('error', function (err, stdout, stderr) {
-                console.log('Cannot process video: ' + err.message);
+                console.log(chalk.red('Cannot process video: ' + err.message));
+                excludedConversion.push(filepath);
+                ffmpegConvert(options);
             })
             .on('end', () => {
-                options['--delete-source'] ? fs.unlinkSync(inputPath) : alreadyConverted.push(filepath);
+                options['--delete-source'] ? fs.unlinkSync(inputPath) : excludedConversion.push(filepath);
                 currentConverting = null;
                 const timeElapsed = moment.duration(moment().diff(startTime)).humanize();
                 console.log(chalk.green.bold(`Finished processing. Elapsed: ${timeElapsed}`));
