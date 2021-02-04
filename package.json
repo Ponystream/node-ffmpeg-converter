@@ -1,0 +1,27 @@
+{
+  "name": "node-ffmpeg-converter",
+  "version": "1.0.0",
+  "description": "A quick CLI video converter using ffmpeg",
+  "main": "src/index.js",
+  "bin": {
+    "@ponystream/ffmpeg-converter": "bin/ffmpeg-converter",
+    "ffmpeg-converter": "bin/ffmpeg-converter"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Mathis DUPUY",
+    "email": "mdupuy57@gmail.com"
+  },
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "arg": "^5.0.0",
+    "chalk": "^4.1.0",
+    "esm": "^3.2.25",
+    "fluent-ffmpeg": "^2.1.2",
+    "hound": "^1.0.5",
+    "moment": "^2.29.1"
+  }
+}
